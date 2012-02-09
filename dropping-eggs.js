@@ -1,6 +1,9 @@
 (function($) {
 	$.fn.droppingEggs = function() {
-		console.log("Hello");
-		console.log(this);
+		$(this).each(function(){
+			var page = $(".ui-page", this);
+			//console.log(page);
+			page.append(this.sky);
+		});
 	};
 })(jQuery);

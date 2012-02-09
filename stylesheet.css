@@ -1,0 +1,104 @@
+.sky {
+	background: -webkit-gradient(linear, center top, center bottom, color-stop(0.0, hsl(240, 75%, 80%)), color-stop(1.0, hsl(240, 40%, 80%)));
+	position: fixed;
+	top: 0px;
+	bottom: 0px;
+	left: 0px;
+	right: 0px;
+}
+
+.ground {
+	background: -webkit-gradient(linear, center top, center bottom, color-stop(0.0, hsl(0, 20%, 50%)), color-stop(1.0, hsl(0, 20%, 30%)));
+	position: absolute;
+	bottom: 0px;
+	left: 0px;
+	right: 0px;
+	height: 10%;
+}
+
+.skyscraper,
+.skyscraper-front,
+.skyscraper-roof {
+	border-width: 0;
+	border-color: #606060;
+	border-style: solid;
+}
+
+.skyscraper-side {
+	border-width: 0;
+	border-color: #505050;
+	border-style: solid;
+}
+
+.skyscraper {
+	position: absolute;
+	left: 0px;
+	bottom: 5%;
+	width: 25%;
+	height: auto;
+}
+
+.skyscraper-front {
+	background: -webkit-gradient(linear, left top, right top, color-stop(0.0, hsl(0, 0%, 50%)), color-stop(1.0, hsl(0, 0%, 60%)));
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	
+	border-width: 0.2em;
+	border-left-width: 0.0em;
+}
+
+.skyscraper-side {
+	background: #505050;
+	position: absolute;
+	left: 100%;
+	top: 0;
+	bottom: 1.2em;
+	width: 2.0em;
+	
+	border-right-width: 0.2em;
+}
+
+.skyscraper-roof {
+	background: #C0C0C0;
+	position: absolute;
+	left: 0;
+	top: -1.2em;
+	right: -2.2em;
+	height: 2.0em;
+	
+	border-top-width: 0.2em;
+}
+
+.skyscraper-side-top {
+	position: absolute;
+	left: 0;
+	top: -1.2em;
+	height: 0;
+	border-top: 1.2em solid transparent;
+	border-right: 2.2em solid #505050;
+}
+
+.skyscraper-side-bottom {
+	position: absolute;
+	left: 0;
+	bottom: -1.2em;
+	height: 0;
+	border-bottom: 1.2em solid transparent;
+	border-left: 2.2em solid #505050;
+}
+
+.skyscraper-levels {
+	position: relative;
+	height: auto;
+	width: auto;
+}
+
+.skyscraper-level {
+	position: relative;
+	background: rgba(0, 0, 0, 0.1);
+	height: 5.0em;
+	margin: 0.5em;
+}
