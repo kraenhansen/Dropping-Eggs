@@ -3,6 +3,10 @@
 	margin: 0px;
 }
 
+body {
+	overflow: hidden;
+}
+
 .sky {
 	background: -webkit-gradient(linear, center top, center bottom, color-stop(0.0, hsl(200, 80%, 80%)), color-stop(1.0, hsl(200, 40%, 80%)));
 	position: fixed;
@@ -10,12 +14,14 @@
 	bottom: 0px;
 	left: 0px;
 	right: 0px;
+	z-index: 0;
 }
 
 .cloud {
 	position: absolute;
 	left: 0;
 	top: 0;
+	z-index: 2;
 }	
 .cloud1 {
 	background: url('images/cloud1.png');
@@ -42,6 +48,7 @@
 	left: 0px;
 	right: 0px;
 	height: 10%;
+	z-index: 3;
 }
 
 .skyscraper,
@@ -64,6 +71,7 @@
 	bottom: 5%;
 	width: 25%;
 	height: auto;
+	z-index: 4;
 }
 
 .skyscraper-front {
@@ -127,8 +135,9 @@
 .skyscraper-level {
 	position: relative;
 	background: rgba(0, 0, 0, 0.1);
-	height: 6.0em;
+	height: 3.0em;
 	margin: 0.5em;
+	border: 0.1em solid rgba(0, 0, 0, 0.3);
 }
 
 .egg {
@@ -136,6 +145,7 @@
 	background: url('images/egg.png');
 	width: 111px;
 	height: 127px;
+	z-index: 7;
 }
 
 .egg.cracked {
@@ -148,6 +158,7 @@
 	position: absolute;
 	left: 0;
 	right: 0;
+	z-index: 5;
 }
 
 .bar.red {
@@ -160,4 +171,49 @@
 	bottom: 0;
 	background: rgba(0, 255, 0, 0.05);
 	border-top: 0.2em solid rgba(0, 255, 0, 0.5);
+}
+
+.modal-shadow {
+	display: none;
+	position: fixed;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	background: rgba(0, 0, 0, 0.33);
+	z-index: 10;
+}
+
+.modal-box {
+	background: rgba(255, 255, 255, 0.8);
+	position: fixed;
+	left: 25%;
+	top: 25%;
+	width: 50%;
+	height: 50%;
+	border-radius: 2em;
+}
+
+.modal-box .text {
+	margin: 2em;
+	text-align: center;
+}
+
+.modal-box .controls {
+	position: absolute;
+	bottom: 1em;
+	left: 1em;
+	right: 1em;
+}
+
+.text {
+	display: none;
+}
+
+.text.failtext {
+	color: red;
+}
+
+.text.wintext-1, .text.wintext-2 {
+	color: green;
 }

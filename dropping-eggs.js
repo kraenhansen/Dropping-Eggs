@@ -8,11 +8,13 @@
 	var methods = {
 		init: function(options) {
 			var defaults = {
-				n: 5
+				n: 10,
+				eggs: 2
 			}; //default options
 			var options = $.extend(defaults, options);
 			return $(this).each(function() {
 				with({$this:$(this)}) {
+					$this.data('options', options); // Remember the initial options.
 					// Insert n levels ...
 					$levelContainer = $this.find(".skyscraper-levels");
 					$levelContainer.empty();
@@ -48,22 +50,37 @@
 							egg.data("updateInterval", updateInterval);
 							egg.droppingEggs("updateEgg");
 							
-							$this.data('egg', egg);
+							$this.data("egg", egg);
 						} else {
 							console.log("Cannot throw egg from ",this," as we already have an egg in the air");
 						}
 					});
 					
-					var criticalLevel = Math.floor(Math.random()*(options.n-1));
+					$this.droppingEggs("gameover");
+					
+					$this.find(".startButton").live('click', function() {
+						$this.droppingEggs("start");
+					});
+					/*
+					var criticalLevel = Math.round(Math.random()*(options.n));
+					//var criticalLevel = 0;
+					//var criticalLevel = options.n;
 					console.log("Pst.. Critical level is "+criticalLevel);
 					$this.data('criticalLevel', criticalLevel);
+					*/
 				}
 			}).droppingEggs('resized');
 		},
 		resized: function() {
 			return $(this).each(function() {
 				with({$this:$(this)}) {
-					// ..
+					// Adjust the body height to fit everything ..
+					//$this.css('min-height', 10000);
+					/*
+					var skyscraperHeight = $this.find('.skyscraper').outerHeight();
+					$this.css('min-height', skyscraperHeight);
+					*/
+					//console.log($this.find('.skyscraper').offset());
 				}
 			}).droppingEggs('updateBars');
 		},
@@ -84,151 +101,217 @@
 					} else {
 						$(".bar.red", $this).css('height', $worstLevel.offset().top + $worstLevel.outerHeight()).fadeIn('fast');
 					}
-
 				}
 			});
 		},
 		updateClouds: function() {
 			return $(this).each(function() {
-				var $this = $(this);
-				var minx = -$this.width();
-				var maxx = $this.parent().width();
-				var miny = 0;
-				var maxy = 100;
-				//console.log(minx, maxx);
-				if($this.data("initialized") === true) {
-					// Update position
-					var xvelocity = $this.data("xvelocity");
-					var newx = parseInt($this.css("left")) + cloud_update_delay*xvelocity/1000;
-					if(newx > maxx) {
-						// Reinitalize next time.
-						$this.css("left", minx);
+				with({$this:$(this)}) {
+					var minx = -$this.width();
+					var maxx = $this.parent().width();
+					var miny = 0;
+					var maxy = 100;
+					//console.log(minx, maxx);
+					if($this.data("initialized") === true) {
+						// Update position
+						var xvelocity = $this.data("xvelocity");
+						var newx = parseInt($this.css("left")) + cloud_update_delay*xvelocity/1000;
+						if(newx > maxx) {
+							// Reinitalize next time.
+							$this.css("left", minx);
+							$this.css("top", Math.random()*(maxy-miny) + miny);
+							$this.data("xvelocity", Math.random()*(cloud_xvelocity_max-cloud_xvelocity_min) + cloud_xvelocity_min);
+						} else {
+							$this.css("left", newx);
+						}
+					} else {
+						// Initialize
+						$this.css("left", Math.random()*(maxx-minx) + minx);
 						$this.css("top", Math.random()*(maxy-miny) + miny);
 						$this.data("xvelocity", Math.random()*(cloud_xvelocity_max-cloud_xvelocity_min) + cloud_xvelocity_min);
-					} else {
-						$this.css("left", newx);
+						$this.data("initialized",true);
 					}
-				} else {
-					// Initialize
-					$this.css("left", Math.random()*(maxx-minx) + minx);
-					$this.css("top", Math.random()*(maxy-miny) + miny);
-					$this.data("xvelocity", Math.random()*(cloud_xvelocity_max-cloud_xvelocity_min) + cloud_xvelocity_min);
-					$this.data("initialized",true);
 				}
 			});
 		},
 		updateEgg: function() {
 			return $(this).each(function() {
-				var $this = $(this);
-				var $body = $this.data('body');
-				var $level = $this.data('level');
-				var motion;
-				if($this.data("flying") === true) {
-					motion = $this.data("motion");
-					var t = motion.t();
-					if(!motion.hasCollided(t)) {
-						var p = motion.p(t);
-						//console.log(p.x, p.y);
-					} else {
-						// Impact!
-						console.log("Boom!");
-						// Did it crack?
-						if($level.data('l') > $body.data('criticalLevel')) {
-							// Yes
-							console.log("Cracked!");
-							$this.addClass('cracked');
-							$body.data('worstLevel', $level);
-							$body.droppingEggs('updateBars');
-							// Set the red bar to this level.
+				with({$this:$(this), $body:$(this).data('body'), $level:$(this).data('level')}) {
+					var motion;
+					if($this.data("flying") === true) {
+						motion = $this.data("motion");
+						var t = motion.t();
+						if(!motion.hasCollided(t)) {
+							var p = motion.p(t);
+							//console.log(p.x, p.y);
 						} else {
-							// No
-							console.log("It didn't crack!");
-							$body.data('bestLevel', $level);
-							$body.droppingEggs('updateBars');
-						}
-						// Clear interval
-						clearInterval($this.data("updateInterval"));
-						$this.data("flying", false);
-						// Fade out
-						$this.fadeOut('slow');
-						// Get ready for the next egg.
-						$body.data('egg', null);
-					}
-				} else {
-					$this.data("rotation", 0.0);
-					// Calculate the eggs motion constants.
-					motion = {
-						p1: { // Initial position
-							x: $level.offset().left+$level.innerWidth(),
-							y: $body.innerHeight() - $level.offset().top - $level.innerHeight()/2
-						},
-						p2: { // Position at impact
-							x: $body.innerWidth()/2, // In the middle of the screen
-							y: $this.outerHeight()/2
-						},
-						v1: { // Initial velocity
-							x:0.0, // Unknown for the moment
-							y:200.0
-						},
-						a: { // Constant acceleration
-							x:0.0,
-							//y:-9.82 // Gravity is a bitch.
-							y:-1000.0 // Gravity is a bitch.
-						},
-						p: function(t) { // Calculate the position at time t
-							return {
-								x: this.p1.x + this.v1.x * t + 0.5*this.a.x*Math.pow(t,2),
-								y: this.p1.y + this.v1.y * t + 0.5*this.a.y*Math.pow(t,2)
-							};
-						},
-						T: function() { // Calculate the time on impact (y = 0)
-							/*
-							//(-1.*v1y+sqrt(v1y^2-2.*ay*p1y))/ay, -(1.*(v1y+sqrt(v1y^2-2.*ay*p1y)))/ay
-							var t1 = (-this.v1.y + Math.sqrt(Math.pow(this.v1.y, 2) - 2*this.a.y+this.p1.y))/this.a.y;
-							var t2 = -(this.v1.y + Math.sqrt(Math.pow(this.v1.y, 2) - 2*this.a.y+this.p1.y))/this.a.y;
-							*/
-							//(-1.*v1y+sqrt(v1y^2-2.*ay*p1y+2.*ay*p2y))/ay, -(1.*(v1y+sqrt(v1y^2-2.*ay*p1y+2.*ay*p2y)))/ay
-							var t1 = (-1.*this.v1.y+Math.sqrt(Math.pow(this.v1.y,2)-2.*this.a.y*this.p1.y+2.*this.a.y*this.p2.y))/this.a.y;
-							var t2 = -(1.*(this.v1.y+Math.sqrt(Math.pow(this.v1.y,2)-2.*this.a.y*this.p1.y+2.*this.a.y*this.p2.y)))/this.a.y;
-							
-							if(t1 >= 0) {
-								return t1;
+							// Impact!
+							console.log("Boom!");
+							// Did it crack?
+							if($level.data('l') >= $body.data('criticalLevel')) {
+								// Yes
+								console.log("Cracked!");
+								$this.addClass('cracked');
+								$body.data('worstLevel', $level);
+								$body.droppingEggs('updateBars');
+								$body.data('eggsUsed', $body.data('eggsUsed') + 1);
+								// Set the red bar to this level.
 							} else {
-								return t2;
+								// No
+								console.log("It didn't crack!");
+								$body.data('bestLevel', $level);
+								$body.droppingEggs('updateBars');
 							}
-						},
-						calculateInitialVelocity: function() { // Calculate the x component of the initial velocity
-							var T = this.T();
-							this.v1.x = (this.p2.x - this.p1.x - 0.5*this.a.x*Math.pow(T,2))/T;
-						},
-						t1: new Date(),
-						t: function() {
-							return ((new Date()) - this.t1) / 1000.0;
-						},
-						hasCollided: function(t) {
-							var p = this.p(t);
-							return (this.p2.y > p.y);
-						},
-						rotation: function(t) {
-							return egg_rotation*t;
+							$body.data('tries', $body.data('tries') + 1);
+							// Clear interval
+							clearInterval($this.data("updateInterval"));
+							$this.data("flying", false);
+							// Fade out
+							$this.fadeOut('slow');
+							// Get ready for the next egg.
+							$body.data('egg', null);
+							
+							// Check for "win" condition
+							$body.droppingEggs('checkWinCondition');
 						}
-					};
+					} else {
+						$this.data("rotation", 0.0);
+						// Calculate the eggs motion constants.
+						motion = {
+							p1: { // Initial position
+								x: $level.offset().left+$level.innerWidth(),
+								y: $body.innerHeight() - $level.offset().top - $level.innerHeight()/2
+							},
+							p2: { // Position at impact
+								x: $body.innerWidth()/2, // In the middle of the screen
+								y: $this.outerHeight()/2
+							},
+							v1: { // Initial velocity
+								x:0.0, // Unknown for the moment
+								y:200.0
+							},
+							a: { // Constant acceleration
+								x:0.0,
+								//y:-9.82 // Gravity is a bitch.
+								y:-1000.0 // Gravity is a bitch.
+							},
+							p: function(t) { // Calculate the position at time t
+								return {
+									x: this.p1.x + this.v1.x * t + 0.5*this.a.x*Math.pow(t,2),
+									y: this.p1.y + this.v1.y * t + 0.5*this.a.y*Math.pow(t,2)
+								};
+							},
+							T: function() { // Calculate the time on impact (y = 0)
+								//(-1.*v1y+sqrt(v1y^2-2.*ay*p1y))/ay, -(1.*(v1y+sqrt(v1y^2-2.*ay*p1y)))/ay
+								//var t1 = (-this.v1.y + Math.sqrt(Math.pow(this.v1.y, 2) - 2*this.a.y+this.p1.y))/this.a.y;
+								//var t2 = -(this.v1.y + Math.sqrt(Math.pow(this.v1.y, 2) - 2*this.a.y+this.p1.y))/this.a.y;
+								
+								//(-1.*v1y+sqrt(v1y^2-2.*ay*p1y+2.*ay*p2y))/ay, -(1.*(v1y+sqrt(v1y^2-2.*ay*p1y+2.*ay*p2y)))/ay
+								var t1 = (-1.*this.v1.y+Math.sqrt(Math.pow(this.v1.y,2)-2.*this.a.y*this.p1.y+2.*this.a.y*this.p2.y))/this.a.y;
+								var t2 = -(1.*(this.v1.y+Math.sqrt(Math.pow(this.v1.y,2)-2.*this.a.y*this.p1.y+2.*this.a.y*this.p2.y)))/this.a.y;
+								
+								if(t1 >= 0) {
+									return t1;
+								} else {
+									return t2;
+								}
+							},
+							calculateInitialVelocity: function() { // Calculate the x component of the initial velocity
+								var T = this.T();
+								this.v1.x = (this.p2.x - this.p1.x - 0.5*this.a.x*Math.pow(T,2))/T;
+							},
+							t1: new Date(),
+							t: function() {
+								return ((new Date()) - this.t1) / 1000.0;
+							},
+							hasCollided: function(t) {
+								var p = this.p(t);
+								return (this.p2.y > p.y);
+							},
+							rotation: function(t) {
+								return egg_rotation*t;
+							}
+						};
+						
+						motion.calculateInitialVelocity();
+						
+						$this.data("motion", motion);
+						$this.data("flying", true);
+					}
+					var t = motion.t();
+					var rotation = Math.round(motion.rotation(t));
+					var p = motion.p(t);
+					var left = Math.round(p.x)-$this.outerWidth()/2;
+					var top = $body.innerHeight()-Math.round(p.y)-$this.outerHeight()/2;
 					
-					motion.calculateInitialVelocity();
-					
-					$this.data("motion", motion);
-					$this.data("flying", true);
+					// Update dom
+					$this.css("-webkit-transform", "rotate("+rotation+"deg)");
+					$this.css("left", left);
+					$this.css("top", top);
 				}
-				var t = motion.t();
-				var rotation = Math.round(motion.rotation(t));
-				var p = motion.p(t);
-				var left = Math.round(p.x)-$this.outerWidth()/2;
-				var top = $body.innerHeight()-Math.round(p.y)-$this.outerHeight()/2;
-				
-				// Update dom
-				$this.css("-webkit-transform", "rotate("+rotation+"deg)");
-				$this.css("left", left);
-				$this.css("top", top);
+			});
+		},
+		checkWinCondition: function() {
+			return $(this).each(function() {
+				with({$this:$(this)}) {
+					var worstLevelNumber = undefined;
+					if($this.data('worstLevel') !== undefined && $this.data('worstLevel') !== null) {
+						worstLevelNumber = $this.data('worstLevel').data('l');
+					}
+					var bestLevelNumber = undefined;
+					if($this.data('bestLevel') !== undefined && $this.data('bestLevel') !== null) {
+						bestLevelNumber = $this.data('bestLevel').data('l');
+					}
+					var highestLevelL = $this.data('options').n - 1;
+					if(worstLevelNumber === 0 || bestLevelNumber === highestLevelL || worstLevelNumber-bestLevelNumber <= 1) {
+						//alert("You found the critical level!");
+						$this.droppingEggs('gameover', false, $this.data('tries'), $this.data('eggsUsed'));
+					} else if($this.data('eggsUsed') >= $this.data('options').eggs) {
+						// We havn't won, but we have used all the eggs.
+						$this.droppingEggs('gameover', true, $this.data('tries'), $this.data('eggsUsed'));
+					}
+					console.log($this.data('eggsUsed'), $this.data('tries'));
+				}
+			});
+		},
+		gameover: function(failed, tries, eggsCracked) {
+			return $(this).each(function() {
+				with({$this:$(this)}) {
+					$this.find(".text").hide();
+					if(failed === false && eggsCracked === 0) {
+						$this.find(".text.wintext-1").show();
+					} else if(failed === false && eggsCracked !== 0) {
+						$this.find(".text.wintext-2").show();
+					} else if(failed === true) {
+						$this.find(".text.failtext").show();
+					} else {
+						$this.find(".text.starttext").show();
+					}
+					if(tries !== undefined) {
+						$this.find(".tries-label").text(tries);
+					}
+					if(eggsCracked !== undefined) {
+						$this.find(".eggs-label").text(eggsCracked);
+					}
+					$this.find(".modal-shadow").fadeIn();
+				}
+			});
+		},
+		start: function() {
+			return $(this).each(function() {
+				with({$this:$(this)}) {
+					$this.find(".modal-shadow").hide();
+					var criticalLevel = Math.round(Math.random()*($this.data("options").n));
+					//var criticalLevel = 0;
+					//var criticalLevel = options.n;
+					console.log("Pst.. Critical level is "+criticalLevel);
+					$this.data('criticalLevel', criticalLevel);
+					$this.data('eggsUsed', 0);
+					$this.data('tries', 0);
+					$this.data('worstLevel', null);
+					$this.data('bestLevel', null);
+					$this.droppingEggs('updateBars');
+				}
 			});
 		}
 	};
