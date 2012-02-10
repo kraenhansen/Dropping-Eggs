@@ -1,7 +1,7 @@
 (function($) {
-	var cloud_xvelocity_min = 10; // px pr sec
-	var cloud_xvelocity_max = 30; // px pr sec
-	var cloud_update_delay = 100; // ms pr update
+	var cloud_xvelocity_min = 50; // px pr sec
+	var cloud_xvelocity_max = 200; // px pr sec
+	var cloud_update_delay = 10; // ms pr update
 	var egg_rotation = 360; // deg pr sec
 	var egg_update_delay = 10; // ms pr update
 	
@@ -107,30 +107,28 @@
 		updateClouds: function() {
 			return $(this).each(function() {
 				with({$this:$(this)}) {
-					var minx = -$this.width();
-					var maxx = $this.parent().width();
-					var miny = 0;
-					var maxy = 100;
-					//console.log(minx, maxx);
+					var minLeft = -$this.width();
+					var maxLeft = $this.parent().width();
+					var minTop = 0;
+					var maxTop = $this.parent().height()/2-$this.height();
 					if($this.data("initialized") === true) {
-						// Update position
-						var xvelocity = $this.data("xvelocity");
-						var newx = parseInt($this.css("left")) + cloud_update_delay*xvelocity/1000;
-						if(newx > maxx) {
-							// Reinitalize next time.
-							$this.css("left", minx);
-							$this.css("top", Math.random()*(maxy-miny) + miny);
-							$this.data("xvelocity", Math.random()*(cloud_xvelocity_max-cloud_xvelocity_min) + cloud_xvelocity_min);
+						if(parseInt($this.css("left")) < maxLeft) {
+							// Update position
+							$this.data("left", $this.data("left") + cloud_update_delay*$this.data("xvelocity")/1000);
 						} else {
-							$this.css("left", newx);
+							// Initialize
+							$this.data("left", minLeft);
+							$this.data("top", Math.random()*(maxTop-minTop) + minTop);
+							$this.data("xvelocity", Math.random()*(cloud_xvelocity_max-cloud_xvelocity_min) + cloud_xvelocity_min);
 						}
 					} else {
-						// Initialize
-						$this.css("left", Math.random()*(maxx-minx) + minx);
-						$this.css("top", Math.random()*(maxy-miny) + miny);
+						$this.data("left", Math.random()*(maxLeft-minLeft) + minLeft);
+						$this.data("top", Math.random()*(maxTop-minTop) + minTop);
 						$this.data("xvelocity", Math.random()*(cloud_xvelocity_max-cloud_xvelocity_min) + cloud_xvelocity_min);
 						$this.data("initialized",true);
 					}
+					$this.css("left", Math.round($this.data("left")));
+					$this.css("top", Math.round($this.data("top")));
 				}
 			});
 		},
@@ -153,26 +151,27 @@
 								console.log("Cracked!");
 								$this.addClass('cracked');
 								$body.data('worstLevel', $level);
-								$body.droppingEggs('updateBars');
 								$body.data('eggsUsed', $body.data('eggsUsed') + 1);
+								$body.find(".yoak").fadeTo('fast', $body.data('eggsUsed')/$body.data('options').eggs);
 								// Set the red bar to this level.
 							} else {
 								// No
 								console.log("It didn't crack!");
 								$body.data('bestLevel', $level);
-								$body.droppingEggs('updateBars');
 							}
 							$body.data('tries', $body.data('tries') + 1);
 							// Clear interval
 							clearInterval($this.data("updateInterval"));
+							// We are not flying anymore ..
 							$this.data("flying", false);
-							// Fade out
-							$this.fadeOut('slow');
 							// Get ready for the next egg.
 							$body.data('egg', null);
-							
-							// Check for "win" condition
-							$body.droppingEggs('checkWinCondition');
+							// Fade out
+							$this.fadeOut(1500, function() {
+								$body.droppingEggs('updateBars');
+								// Check for "win" condition
+								$body.droppingEggs('checkWinCondition');
+							});
 						}
 					} else {
 						$this.data("rotation", 0.0);
@@ -310,6 +309,8 @@
 					$this.data('tries', 0);
 					$this.data('worstLevel', null);
 					$this.data('bestLevel', null);
+					// Whipe up yoak
+					$this.find(".yoak").hide();
 					$this.droppingEggs('updateBars');
 				}
 			});

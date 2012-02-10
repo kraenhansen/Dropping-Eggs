@@ -41,6 +41,13 @@ body {
 	height: 126px;
 }
 
+.cloud4 {
+	background: url('images/cloud4.png');
+	width: 508px;
+	height: 138px;
+}
+
+
 .ground {
 	background: -webkit-gradient(linear, center top, center bottom, color-stop(0.0, hsl(0, 20%, 50%)), color-stop(1.0, hsl(0, 20%, 30%)));
 	position: absolute;
@@ -138,6 +145,7 @@ body {
 	height: 3.0em;
 	margin: 0.5em;
 	border: 0.1em solid rgba(0, 0, 0, 0.3);
+	cursor: pointer;
 }
 
 .egg {
@@ -216,4 +224,21 @@ body {
 
 .text.wintext-1, .text.wintext-2 {
 	color: green;
+}
+
+.text .tries-label, .text .eggs-label {
+	font-style: bold;
+}
+
+.yoak {
+	display: none;
+	position: absolute;
+	top: 0;
+	left: 50%;
+	width: 234px;
+	height: 81px;
+	/*height: 100%;*/
+	margin-left: -117px;
+	background: url('images/yoak.png');
+	z-index: 3;
 }
