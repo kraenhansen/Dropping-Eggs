@@ -7,6 +7,13 @@ body {
 	overflow: hidden;
 }
 
+h1 {
+	font-size: 1.0em;
+}
+h2 {
+	font-size: 0.6em;
+}
+
 .sky {
 	background: -webkit-gradient(linear, center top, center bottom, color-stop(0.0, hsl(200, 80%, 80%)), color-stop(1.0, hsl(200, 40%, 80%)));
 	position: fixed;
@@ -142,7 +149,7 @@ body {
 .skyscraper-level {
 	position: relative;
 	background: rgba(0, 0, 0, 0.1);
-	height: 3.0em;
+	height: 1.5em;
 	margin: 0.5em;
 	border: 0.1em solid rgba(0, 0, 0, 0.3);
 	cursor: pointer;
@@ -150,16 +157,20 @@ body {
 
 .egg {
 	position: absolute;
-	background: url('images/egg.png');
-	width: 111px;
-	height: 127px;
+	background: url('images/egg-small.png');
+	/*width: 111px;
+	height: 127px;*/
+	width: 40px;
+	height: 40px;
 	z-index: 7;
 }
 
 .egg.cracked {
-	background: url('images/egg-cracked.png');
-	width: 112px;
-	height: 136px;
+	background: url('images/egg-cracked-small.png');
+	/*width: 112px;
+	height: 136px;*/
+	width: 40px;
+	height: 40px;
 }
 
 .bar {
@@ -195,11 +206,11 @@ body {
 .modal-box {
 	background: rgba(255, 255, 255, 0.8);
 	position: fixed;
-	left: 25%;
-	top: 25%;
-	width: 50%;
-	height: 50%;
-	border-radius: 2em;
+	left: 10%;
+	top: 10%;
+	width: 80%;
+	height: 80%;
+	border-radius: 1em;
 }
 
 .modal-box .text {
@@ -233,12 +244,15 @@ body {
 .yoak {
 	display: none;
 	position: absolute;
-	top: 0;
+	top: 50%;
 	left: 50%;
-	width: 234px;
-	height: 81px;
-	/*height: 100%;*/
-	margin-left: -117px;
-	background: url('images/yoak.png');
+	/*width: 234px;
+	height: 81px;*/
+	width: 144px;
+	height: 50px;
+	/*margin-left: -117px;*/
+	margin-left: -72px;
+	margin-top: -25px;
+	background: url('images/yoak-small.png');
 	z-index: 3;
 }

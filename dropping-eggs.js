@@ -183,7 +183,7 @@
 							},
 							p2: { // Position at impact
 								x: $body.innerWidth()/2, // In the middle of the screen
-								y: $this.outerHeight()/2
+								y: $body.find(".ground").outerHeight()/2
 							},
 							v1: { // Initial velocity
 								x:0.0, // Unknown for the moment
@@ -195,10 +195,14 @@
 								y:-1000.0 // Gravity is a bitch.
 							},
 							p: function(t) { // Calculate the position at time t
-								return {
-									x: this.p1.x + this.v1.x * t + 0.5*this.a.x*Math.pow(t,2),
-									y: this.p1.y + this.v1.y * t + 0.5*this.a.y*Math.pow(t,2)
-								};
+								if(this.hasCollided(t)) {
+									return this.p2;
+								} else {
+									return {
+										x: this.p1.x + this.v1.x * t + 0.5*this.a.x*Math.pow(t,2),
+										y: this.p1.y + this.v1.y * t + 0.5*this.a.y*Math.pow(t,2)
+									};
+								}
 							},
 							T: function() { // Calculate the time on impact (y = 0)
 								//(-1.*v1y+sqrt(v1y^2-2.*ay*p1y))/ay, -(1.*(v1y+sqrt(v1y^2-2.*ay*p1y)))/ay
@@ -224,8 +228,11 @@
 								return ((new Date()) - this.t1) / 1000.0;
 							},
 							hasCollided: function(t) {
+								/*
 								var p = this.p(t);
 								return (this.p2.y > p.y);
+								*/
+								return t >= this.T();
 							},
 							rotation: function(t) {
 								return egg_rotation*t;
