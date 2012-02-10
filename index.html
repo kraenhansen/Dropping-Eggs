@@ -10,13 +10,22 @@
 		<script src="jquery.mobile-1.0.1.min.js" type="text/javascript" charset="utf-8"></script>
 		<script src="dropping-eggs.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript" charset="utf-8">
-		$(function(){
+		function initialize() {
 			$(document.body).droppingEggs();
-		});
+		}
+		function resized() {
+			$(document.body).droppingEggs('resized');
+		}
+		$(initialize);
+		$(window).resize(resized);
 		</script>
 	</head>
 	<body>
-		<div class="sky"></div>
+		<div class="sky">
+			<div class="cloud cloud1"></div>
+			<div class="cloud cloud2"></div>
+			<div class="cloud cloud3"></div>
+		</div>
 		<div class="ground"></div>
 		<div class="skyscraper">
 			<div class="skyscraper-roof"></div>
@@ -26,11 +35,9 @@
 			</div>
 			<div class="skyscraper-front"></div>
 			<div class="skyscraper-levels">
-				<div class="skyscraper-level"></div>
-				<div class="skyscraper-level"></div>
-				<div class="skyscraper-level"></div>
-				<div class="skyscraper-level"></div>
 			</div>
 		</div>
+		<div class="bar red"></div>
+		<div class="bar green"></div>
 	</body>
 </html>
