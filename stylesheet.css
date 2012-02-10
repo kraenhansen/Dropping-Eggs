@@ -238,7 +238,7 @@ h2 {
 }
 
 .text .tries-label, .text .eggs-label {
-	font-style: bold;
+	font-weight: bold;
 }
 
 .yoak {
