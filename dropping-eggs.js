@@ -164,13 +164,13 @@
 							clearInterval($this.data("updateInterval"));
 							// We are not flying anymore ..
 							$this.data("flying", false);
-							// Get ready for the next egg.
-							$body.data('egg', null);
 							// Fade out
 							$this.fadeOut(1500, function() {
 								$body.droppingEggs('updateBars');
 								// Check for "win" condition
 								$body.droppingEggs('checkWinCondition');
+								// Get ready for the next egg.
+								$body.data('egg', null);
 							});
 						}
 					} else {
