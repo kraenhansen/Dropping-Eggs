@@ -19,7 +19,7 @@
 					$levelContainer = $this.find(".skyscraper-levels");
 					$levelContainer.empty();
 					for(var l = 0; l < options.n; l++) {
-						$level = $("<div class='skyscraper-level'></div>");
+						$level = $("<div class='skyscraper-level'>"+(options.n-l)+"</div>");
 						$level.data('l', options.n-l-1);
 						$level.appendTo($levelContainer);
 					}
