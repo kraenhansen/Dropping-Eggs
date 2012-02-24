@@ -61,7 +61,7 @@ h2 {
 	bottom: 0px;
 	left: 0px;
 	right: 0px;
-	height: 10%;
+	height: 4em;
 	z-index: 3;
 }
 
@@ -82,14 +82,14 @@ h2 {
 .skyscraper {
 	position: absolute;
 	left: 0px;
-	bottom: 5%;
+	bottom: 0;
 	width: 25%;
 	height: auto;
 	z-index: 4;
 }
 
 .skyscraper-front {
-	background: -webkit-gradient(linear, left top, right top, color-stop(0.0, hsl(0, 0%, 50%)), color-stop(1.0, hsl(0, 0%, 60%)));
+	background: -webkit-gradient(linear, left bottom, right top, color-stop(0.0, hsl(0, 0%, 40%)), color-stop(1.0, hsl(0, 0%, 80%)));
 	position: absolute;
 	left: 0;
 	right: 0;
@@ -150,9 +150,14 @@ h2 {
 	position: relative;
 	background: rgba(0, 0, 0, 0.1);
 	height: 1.5em;
+	line-height: 1.5em;
+	vertical-align: middle;
+	padding-left: 0.3em;
 	margin: 0.5em;
 	border: 0.1em solid rgba(0, 0, 0, 0.3);
 	cursor: pointer;
+	color: white;
+	text-shadow: 0 1px 1px white, 0 -1px 1px black;
 }
 
 .egg {
@@ -255,4 +260,16 @@ h2 {
 	margin-top: -25px;
 	background: url('images/yoak-small.png');
 	z-index: 3;
+}
+
+.moveable {
+	position: fixed !important;
+	top: 0px;
+	bottom: 0px;
+	left: 0px;
+	right: 0px;
+}
+
+.moveable-view {
+	/*padding-top: 4em;*/
 }

@@ -8,6 +8,12 @@
 		<link rel="stylesheet" href="stylesheet.css" type="text/css" charset="utf-8" />
 		<script src="jquery-1.7.1.min.js" type="text/javascript" charset="utf-8"></script>
 		<script src="jquery.mobile-1.0.1.min.js" type="text/javascript" charset="utf-8"></script>
+		<!-- jQuery scrollview plugin: start -->
+		<link rel="stylesheet" href="scrollview/jquery.mobile.scrollview.css" />
+		<script src="scrollview/jquery.easing.1.3.js"></script>
+		<script src="scrollview/jquery.mobile.scrollview.js"></script>
+		<script src="scrollview/scrollview.js"></script>
+		<!-- jQuery scrollview plugin: end -->
 		<script src="dropping-eggs.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript" charset="utf-8">
 		function initialize() {
@@ -21,27 +27,6 @@
 		</script>
 	</head>
 	<body>
-		<div class="sky">
-			<div class="cloud cloud1"></div>
-			<div class="cloud cloud2"></div>
-			<div class="cloud cloud3"></div>
-			<div class="cloud cloud4"></div>
-		</div>
-		<div class="ground">
-			<div class="yoak"></div>
-		</div>
-		<div class="skyscraper">
-			<div class="skyscraper-roof"></div>
-			<div class="skyscraper-side">
-				<div class="skyscraper-side-top"></div>
-				<div class="skyscraper-side-bottom"></div>
-			</div>
-			<div class="skyscraper-front"></div>
-			<div class="skyscraper-levels">
-			</div>
-		</div>
-		<div class="bar red"></div>
-		<div class="bar green"></div>
 		<div class="modal-shadow">
 			<div class="modal-box">
 				<div class="text starttext"><h1>Find den etage der lige netop er høj nok til at smadre æg</h1><h2>Men pas på, du har kun 2 æg!</h2></div>
@@ -51,6 +36,31 @@
 				<div class="controls">
 					<button class="startButton">Start forfra!</button>
 				</div>
+			</div>
+		</div>
+		<div class="sky">
+			<div class="cloud cloud1"></div>
+			<div class="cloud cloud2"></div>
+			<div class="cloud cloud3"></div>
+			<div class="cloud cloud4"></div>
+		</div>
+		<div class="moveable" role="main" data-scroll="y">
+			<div class="moveable-view">
+				<div class="ground">
+					<div class="yoak"></div>
+				</div>
+				<div class="skyscraper">
+					<div class="skyscraper-roof"></div>
+					<div class="skyscraper-side">
+						<div class="skyscraper-side-top"></div>
+						<div class="skyscraper-side-bottom"></div>
+					</div>
+					<div class="skyscraper-front"></div>
+					<div class="skyscraper-levels">
+					</div>
+				</div>
+				<div class="bar red"></div>
+				<div class="bar green"></div>
 			</div>
 		</div>
 	</body>

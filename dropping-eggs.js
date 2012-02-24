@@ -8,7 +8,7 @@
 	var methods = {
 		init: function(options) {
 			var defaults = {
-				n: 10,
+				n: 100,
 				eggs: 2
 			}; //default options
 			var options = $.extend(defaults, options);
@@ -19,7 +19,7 @@
 					$levelContainer = $this.find(".skyscraper-levels");
 					$levelContainer.empty();
 					for(var l = 0; l < options.n; l++) {
-						$level = $("<div class='skyscraper-level'></div>");
+						$level = $("<div class='skyscraper-level'>"+(options.n-l)+"</div>");
 						$level.data('l', options.n-l-1);
 						$level.appendTo($levelContainer);
 					}
@@ -61,6 +61,11 @@
 					$this.find(".startButton").live('click', function() {
 						$this.droppingEggs("start");
 					});
+					
+					// Initialize the scrollview
+					var skyscraperHeight = $(".skyscraper").innerHeight();
+					$(".moveable-view").css('height', skyscraperHeight);
+					
 					/*
 					var criticalLevel = Math.round(Math.random()*(options.n));
 					//var criticalLevel = 0;
@@ -93,13 +98,15 @@
 					if($bestLevel === undefined || $bestLevel === null) {
 						$(".bar.green", $this).hide();
 					} else {
-						$(".bar.green", $this).css('top', $bestLevel.offset().top).fadeIn('fast');
+						var top = $bestLevel.position().top;
+						$(".bar.green", $this).css('top', top).fadeIn('fast');
 					}
 
 					if($worstLevel === undefined || $worstLevel === null) {
 						$(".bar.red", $this).hide();
 					} else {
-						$(".bar.red", $this).css('height', $worstLevel.offset().top + $worstLevel.outerHeight()).fadeIn('fast');
+						var top = $worstLevel.position().top;
+						$(".bar.red", $this).css('height', top + $worstLevel.outerHeight()).fadeIn('fast');
 					}
 				}
 			});
@@ -166,6 +173,9 @@
 							$this.data("flying", false);
 							// Fade out
 							$this.fadeOut(1500, function() {
+								// Delete the egg...
+								$(this).remove();
+								// Update the bars.
 								$body.droppingEggs('updateBars');
 								// Check for "win" condition
 								$body.droppingEggs('checkWinCondition');
