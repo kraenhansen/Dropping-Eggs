@@ -41,7 +41,7 @@
 						if(typeof egg === 'undefined' || egg === null) {
 							// Spawn egg
 							egg = $("<div class='egg'></div>").hide().appendTo($scrollableContainer);
-							egg.fadeIn('fast');
+							egg.show();
 							console.log("Throwing ",egg," from ",this);
 
 							egg.data("level", $(this));
