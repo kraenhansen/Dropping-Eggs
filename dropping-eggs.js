@@ -64,6 +64,11 @@
 					$this.find(".startButton").live('click', function() {
 						$this.droppingEggs("start");
 					});
+					
+					// Initialize the scrollview
+					var skyscraperHeight = $(".skyscraper").innerHeight();
+					$(".moveable-view").css('height', skyscraperHeight);
+					
 					/*
 					var criticalLevel = Math.round(Math.random()*(options.n));
 					//var criticalLevel = 0;
@@ -97,14 +102,14 @@
 						$(".bar.green", $this).hide();
 					} else {
 						var top = $bestLevel.position().top+$bestLevel.parent().position().top+$bestLevel.parent().parent().position().top;
-						console.log($bestLevel.position().top, $bestLevel.parent().position().top, $bestLevel.parent().parent().position().top);
 						$(".bar.green", $this).css('top', top).fadeIn('fast');
 					}
 
 					if($worstLevel === undefined || $worstLevel === null) {
 						$(".bar.red", $this).hide();
 					} else {
-						var top = $worstLevel.position().top + $worstLevel.parent().position().top + $worstLevel.parent().parent().position().top + $worstLevel.parent().parent().parent().position().top;
+						//var top = $worstLevel.position().top + $worstLevel.parent().position().top + $worstLevel.parent().parent().position().top + $worstLevel.parent().parent().parent().position().top;
+						var top = $worstLevel.position().top + $worstLevel.parent().position().top + $worstLevel.parent().parent().position().top;
 						$(".bar.red", $this).css('height', top + $worstLevel.outerHeight(true)).fadeIn('fast');
 					}
 				}
@@ -172,6 +177,9 @@
 							$this.data("flying", false);
 							// Fade out
 							$this.fadeOut(1500, function() {
+								// Delete the egg...
+								$(this).remove();
+								// Update the bars.
 								$body.droppingEggs('updateBars');
 								// Check for "win" condition
 								$body.droppingEggs('checkWinCondition');
@@ -284,7 +292,7 @@
 						// We havn't won, but we have used all the eggs.
 						$this.droppingEggs('gameover', true, $this.data('tries'), $this.data('eggsUsed'));
 					}
-					console.log($this.data('eggsUsed'), $this.data('tries'));
+					console.log("eggsUsed: ", $this.data('eggsUsed'), "tries: " + $this.data('tries'));
 				}
 			});
 		},

@@ -82,12 +82,13 @@ h2 {
 	width: 25%;
 	height: auto;
 	z-index: 4;
-	padding: 0.5em 0em;
+	padding-bottom: 0.5em;
+	padding-top: 0.5em;
 	top: 2em;
 }
 
 .skyscraper-front {
-	background: -webkit-gradient(linear, left top, right top, color-stop(0.0, hsl(0, 0%, 50%)), color-stop(1.0, hsl(0, 0%, 60%)));
+	background: -webkit-gradient(linear, left bottom, right top, color-stop(0.0, hsl(0, 0%, 40%)), color-stop(1.0, hsl(0, 0%, 80%)));
 	position: absolute;
 	left: 0;
 	right: 0;
@@ -262,7 +263,6 @@ h2 {
 	background: url('images/yoak-small.png');
 	z-index: 3;
 }
-
 
 /* Scrolling specific */
 .ui-page {
