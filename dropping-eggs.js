@@ -1,7 +1,7 @@
 (function($) {
 	var cloud_xvelocity_min = 50; // px pr sec
 	var cloud_xvelocity_max = 200; // px pr sec
-	var cloud_update_delay = 10; // ms pr update
+	var cloud_update_delay = 50; // ms pr update
 	var egg_rotation = 360; // deg pr sec
 	var egg_update_delay = 10; // ms pr update
 	

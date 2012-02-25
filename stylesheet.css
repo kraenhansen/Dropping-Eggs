@@ -5,6 +5,7 @@
 
 body {
 	overflow: hidden;
+	height: 100%;
 }
 
 h1 {
@@ -82,7 +83,7 @@ h2 {
 	height: auto;
 	z-index: 4;
 	padding: 0.5em 0em;
-	margin-bottom: -2em;
+	top: 2em;
 }
 
 .skyscraper-front {
@@ -262,17 +263,18 @@ h2 {
 	z-index: 3;
 }
 
+
+/* Scrolling specific */
+.ui-page {
+	height: 100%;
+}
+
 .scrollable {
-	position: absolute;
-	top: 0px;
-	bottom: 0px;
-	left: 0px;
-	right: 0px;
-	overflow-y: scroll;
+	height: 100%;
 }
 
 .scrollable-view {
 	height: auto;
 	position: relative;
-	padding-top: 2em;
+/*	padding-top: 2em;*/
 }
