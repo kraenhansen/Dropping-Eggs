@@ -96,13 +96,16 @@
 					if($bestLevel === undefined || $bestLevel === null) {
 						$(".bar.green", $this).hide();
 					} else {
-						$(".bar.green", $this).css('top', $bestLevel.position().top).fadeIn('fast');
+						var top = $bestLevel.position().top+$bestLevel.parent().position().top+$bestLevel.parent().parent().position().top;
+						console.log($bestLevel.position().top, $bestLevel.parent().position().top, $bestLevel.parent().parent().position().top);
+						$(".bar.green", $this).css('top', top).fadeIn('fast');
 					}
 
 					if($worstLevel === undefined || $worstLevel === null) {
 						$(".bar.red", $this).hide();
 					} else {
-						$(".bar.red", $this).css('height', $worstLevel.position().top + $worstLevel.outerHeight()).fadeIn('fast');
+						var top = $worstLevel.position().top + $worstLevel.parent().position().top + $worstLevel.parent().parent().position().top + $worstLevel.parent().parent().parent().position().top;
+						$(".bar.red", $this).css('height', top + $worstLevel.outerHeight(true)).fadeIn('fast');
 					}
 				}
 			});
@@ -178,11 +181,12 @@
 						}
 					} else {
 						$this.data("rotation", 0.0);
+						var leveltop = $level.position().top + $level.parent().position().top + $level.parent().parent().position().top;
 						// Calculate the eggs motion constants.
 						motion = {
 							p1: { // Initial position
 								x: $level.position().left+$level.innerWidth(),
-								y: $viewport.innerHeight() - $level.position().top - $level.innerHeight()/2
+								y: $viewport.innerHeight() - leveltop - $level.outerHeight(true)/2
 							},
 							p2: { // Position at impact
 								x: $viewport.innerWidth()/2, // In the middle of the screen
@@ -191,6 +195,7 @@
 							v1: { // Initial velocity
 								x:0.0, // Unknown for the moment
 								y:200.0
+								//y:0.0
 							},
 							a: { // Constant acceleration
 								x:0.0,

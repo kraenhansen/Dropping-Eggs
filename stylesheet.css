@@ -147,7 +147,9 @@ h2 {
 	position: relative;
 	background: rgba(0, 0, 0, 0.1);
 	height: 1.5em;
-	margin: 0.5em;
+	margin-top: 0.5em;
+	margin-left: 0.5em;
+	margin-right: 0.5em;
 	border: 0.1em solid rgba(0, 0, 0, 0.3);
 	cursor: pointer;
 	
