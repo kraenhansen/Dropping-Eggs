@@ -8,7 +8,7 @@
 	var methods = {
 		init: function(options) {
 			var defaults = {
-				n: 10,
+				n: 100,
 				eggs: 2
 			}; //default options
 			var options = $.extend(defaults, options);
@@ -32,18 +32,21 @@
 					$this.data("cloudsInterval", cloudsInterval);
 					// Initalizes all clouds
 					$this.find(".cloud").droppingEggs("updateClouds");
+
+					$scrollableContainer = $this.find(".scrollable-view");
 					
 					$levels = $this.find(".skyscraper-level");
 					$levels.live("click", function(){
 						var egg = $this.data('egg');
 						if(typeof egg === 'undefined' || egg === null) {
 							// Spawn egg
-							egg = $("<div class='egg'></div>").hide().appendTo($this);
+							egg = $("<div class='egg'></div>").hide().appendTo($scrollableContainer);
 							egg.fadeIn('fast');
 							console.log("Throwing ",egg," from ",this);
 
 							egg.data("level", $(this));
 							egg.data("body", $this);
+							egg.data("viewport", $this.find(".scrollable-view"));
 							var updateInterval = setInterval(function(){
 								egg.droppingEggs("updateEgg");
 							}, egg_update_delay);
@@ -93,13 +96,13 @@
 					if($bestLevel === undefined || $bestLevel === null) {
 						$(".bar.green", $this).hide();
 					} else {
-						$(".bar.green", $this).css('top', $bestLevel.offset().top).fadeIn('fast');
+						$(".bar.green", $this).css('top', $bestLevel.position().top).fadeIn('fast');
 					}
 
 					if($worstLevel === undefined || $worstLevel === null) {
 						$(".bar.red", $this).hide();
 					} else {
-						$(".bar.red", $this).css('height', $worstLevel.offset().top + $worstLevel.outerHeight()).fadeIn('fast');
+						$(".bar.red", $this).css('height', $worstLevel.position().top + $worstLevel.outerHeight()).fadeIn('fast');
 					}
 				}
 			});
@@ -134,7 +137,7 @@
 		},
 		updateEgg: function() {
 			return $(this).each(function() {
-				with({$this:$(this), $body:$(this).data('body'), $level:$(this).data('level')}) {
+				with({$this:$(this), $body:$(this).data('body'), $viewport:$(this).data('viewport'), $level:$(this).data('level')}) {
 					var motion;
 					if($this.data("flying") === true) {
 						motion = $this.data("motion");
@@ -178,12 +181,12 @@
 						// Calculate the eggs motion constants.
 						motion = {
 							p1: { // Initial position
-								x: $level.offset().left+$level.innerWidth(),
-								y: $body.innerHeight() - $level.offset().top - $level.innerHeight()/2
+								x: $level.position().left+$level.innerWidth(),
+								y: $viewport.innerHeight() - $level.position().top - $level.innerHeight()/2
 							},
 							p2: { // Position at impact
-								x: $body.innerWidth()/2, // In the middle of the screen
-								y: $body.find(".ground").outerHeight()/2
+								x: $viewport.innerWidth()/2, // In the middle of the screen
+								y: $viewport.find(".ground").outerHeight()/2
 							},
 							v1: { // Initial velocity
 								x:0.0, // Unknown for the moment
@@ -248,7 +251,7 @@
 					var rotation = Math.round(motion.rotation(t));
 					var p = motion.p(t);
 					var left = Math.round(p.x)-$this.outerWidth()/2;
-					var top = $body.innerHeight()-Math.round(p.y)-$this.outerHeight()/2;
+					var top = $viewport.innerHeight()-Math.round(p.y)-$this.outerHeight()/2;
 					
 					// Update dom
 					$this.css("-webkit-transform", "rotate("+rotation+"deg)");
