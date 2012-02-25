@@ -270,6 +270,10 @@
 					$this.css("-webkit-transform", "rotate("+rotation+"deg)");
 					$this.css("left", left);
 					$this.css("top", top);
+					
+					console.log(top);
+					// Scroll to egg..
+					//$viewport.parent().scrollview('scrollTo', 0, -top+$viewport.parent().innerHeight()/2);
 				}
 			});
 		},
