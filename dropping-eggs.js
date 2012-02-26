@@ -270,7 +270,11 @@
 						$body.data("scrollPosition", $scrollableView.scrollview('getScrollPosition'));
 						// Scroll to bottom, take as long as it takes to drop the egg.
 						//$scrollableView.scrollview('scrollTo', 0, $scrollableView.innerHeight()-$scrollableWorld.innerHeight(), motion.T());
-						$scrollableView.scrollview('scrollTo', 0, $scrollableWorld.innerHeight()-$scrollableView.innerHeight(), motion.T()*1000*1.1);
+						// Wait 0.5 sec before following the egg.
+						setTimeout(function() {
+							// Scroll to ground, fast enough.
+							$scrollableView.scrollview('scrollTo', 0, $scrollableWorld.innerHeight()-$scrollableView.innerHeight(), Math.max(motion.T()*1000-500, 0));
+						},500);
 						$this.data("flying", true);
 					}
 					var t = motion.t();
