@@ -33,20 +33,26 @@
 					// Initalizes all clouds
 					$this.find(".cloud").droppingEggs("updateClouds");
 
-					$scrollableContainer = $this.find(".scrollable-view");
+					$scrollableWorld = $this.find(".scrollable-view");
+
+					/*
+					$scrollableContainer.parent().bind('scrollstop', function(e) {
+						console.log(e);
+					});
+					*/
 					
 					$levels = $this.find(".skyscraper-level");
 					$levels.live("click", function(){
 						var egg = $this.data('egg');
 						if(typeof egg === 'undefined' || egg === null) {
 							// Spawn egg
-							egg = $("<div class='egg'></div>").hide().appendTo($scrollableContainer);
+							egg = $("<div class='egg'></div>").hide().appendTo($scrollableWorld);
 							egg.show();
 							console.log("Throwing ",egg," from ",this);
 
 							egg.data("level", $(this));
 							egg.data("body", $this);
-							egg.data("viewport", $this.find(".scrollable-view"));
+							egg.data("scrollableWorld", $scrollableWorld);
 							var updateInterval = setInterval(function(){
 								egg.droppingEggs("updateEgg");
 							}, egg_update_delay);
@@ -145,7 +151,7 @@
 		},
 		updateEgg: function() {
 			return $(this).each(function() {
-				with({$this:$(this), $body:$(this).data('body'), $viewport:$(this).data('viewport'), $level:$(this).data('level')}) {
+				with({$this:$(this), $body:$(this).data('body'), $scrollableWorld:$(this).data('scrollableWorld'), $scrollableView:$(this).data('scrollableWorld').parent(), $level:$(this).data('level')}) {
 					var motion;
 					if($this.data("flying") === true) {
 						motion = $this.data("motion");
@@ -176,7 +182,7 @@
 							// We are not flying anymore ..
 							$this.data("flying", false);
 							// Fade out
-							$this.fadeOut(1500, function() {
+							$this.fadeOut(1000, function() {
 								// Delete the egg...
 								$(this).remove();
 								// Update the bars.
@@ -185,6 +191,9 @@
 								$body.droppingEggs('checkWinCondition');
 								// Get ready for the next egg.
 								$body.data('egg', null);
+								console.log($body.data("scrollPosition"));
+								// Scroll to the previous position
+								$scrollableView.scrollview('scrollTo', $body.data("scrollPosition").x, $body.data("scrollPosition").y, 1000);
 							});
 						}
 					} else {
@@ -194,11 +203,11 @@
 						motion = {
 							p1: { // Initial position
 								x: $level.position().left+$level.innerWidth(),
-								y: $viewport.innerHeight() - leveltop - $level.outerHeight(true)/2
+								y: $scrollableWorld.innerHeight() - leveltop - $level.outerHeight(true)/2
 							},
 							p2: { // Position at impact
-								x: $viewport.innerWidth()/2, // In the middle of the screen
-								y: $viewport.find(".ground").outerHeight()/2
+								x: $scrollableWorld.innerWidth()/2, // In the middle of the screen
+								y: $scrollableWorld.find(".ground").outerHeight()/2
 							},
 							v1: { // Initial velocity
 								x:0.0, // Unknown for the moment
@@ -258,22 +267,36 @@
 						motion.calculateInitialVelocity();
 						
 						$this.data("motion", motion);
+						$body.data("scrollPosition", $scrollableView.scrollview('getScrollPosition'));
+						// Scroll to bottom, take as long as it takes to drop the egg.
+						//$scrollableView.scrollview('scrollTo', 0, $scrollableView.innerHeight()-$scrollableWorld.innerHeight(), motion.T());
+						$scrollableView.scrollview('scrollTo', 0, $scrollableWorld.innerHeight()-$scrollableView.innerHeight(), motion.T()*1000*1.1);
 						$this.data("flying", true);
 					}
 					var t = motion.t();
 					var rotation = Math.round(motion.rotation(t));
 					var p = motion.p(t);
 					var left = Math.round(p.x)-$this.outerWidth()/2;
-					var top = $viewport.innerHeight()-Math.round(p.y)-$this.outerHeight()/2;
+					var top = $scrollableWorld.innerHeight()-Math.round(p.y)-$this.outerHeight()/2;
 					
 					// Update dom
 					$this.css("-webkit-transform", "rotate("+rotation+"deg)");
 					$this.css("left", left);
 					$this.css("top", top);
 					
-					console.log(top);
+					//console.log(top);
 					// Scroll to egg..
-					//$viewport.parent().scrollview('scrollTo', 0, -top+$viewport.parent().innerHeight()/2);
+					if($this.data("flying") === true) {
+						// We are in the air
+						/*
+						var scrollTop = -top+$scrollableView.innerHeight()/2; // The egg in the center ...
+						console.log($scrollableView.innerHeight()/2 - $scrollableWorld.innerHeight(), scrollTop);
+						scrollTop = Math.max($scrollableView.innerHeight() - $scrollableWorld.innerHeight(), scrollTop);
+						scrollTop = Math.min(0, scrollTop);
+						*/
+					} else {
+						//$scrollableView.scrollview('scrollTo', $this.data("scrollPosition").x, $this.data("scrollPosition").y, 1000);
+					}
 				}
 			});
 		},
