@@ -8,13 +8,14 @@
 	var methods = {
 		init: function(options) {
 			var defaults = {
-				n: 100,
+				n: 20,
 				eggs: 2
 			}; //default options
 			var options = $.extend(defaults, options);
 			return $(this).each(function() {
 				with({$this:$(this)}) {
 					$this.data('options', options); // Remember the initial options.
+					
 					// Insert n levels ...
 					$levelContainer = $this.find(".skyscraper-levels");
 					$levelContainer.empty();
@@ -58,6 +59,9 @@
 							}, egg_update_delay);
 							egg.data("updateInterval", updateInterval);
 							egg.droppingEggs("updateEgg");
+
+							$this.data('tries', $this.data('tries') + 1);
+							$this.droppingEggs("updateHID");
 							
 							$this.data("egg", egg);
 						} else {
@@ -162,6 +166,10 @@
 						} else {
 							// Impact!
 							console.log("Boom!");
+							// Stop the sound
+							$body.find("#sound-air").get(0).pause();
+							// Reload to rewind
+							$body.find("#sound-air").get(0).load();
 							// Did it crack?
 							if($level.data('l') >= $body.data('criticalLevel')) {
 								// Yes
@@ -170,30 +178,33 @@
 								$body.data('worstLevel', $level);
 								$body.data('eggsUsed', $body.data('eggsUsed') + 1);
 								$body.find(".yoak").fadeTo('fast', $body.data('eggsUsed')/$body.data('options').eggs);
+								$body.droppingEggs('updateHID');
 								// Set the red bar to this level.
+								// Make some noise.
+								$body.find("#sound-impact-crack").get(0).play();
 							} else {
 								// No
 								console.log("It didn't crack!");
 								$body.data('bestLevel', $level);
+								// Make some noise.
+								$body.find("#sound-impact-normal").get(0).play();
 							}
-							$body.data('tries', $body.data('tries') + 1);
 							// Clear interval
 							clearInterval($this.data("updateInterval"));
 							// We are not flying anymore ..
 							$this.data("flying", false);
+							// Update the bars.
+							$body.droppingEggs('updateBars');
 							// Fade out
-							$this.fadeOut(1000, function() {
+							$this.fadeOut(500, function() {
 								// Delete the egg...
 								$(this).remove();
-								// Update the bars.
-								$body.droppingEggs('updateBars');
 								// Check for "win" condition
 								$body.droppingEggs('checkWinCondition');
 								// Get ready for the next egg.
 								$body.data('egg', null);
-								console.log($body.data("scrollPosition"));
 								// Scroll to the previous position
-								$scrollableView.scrollview('scrollTo', $body.data("scrollPosition").x, $body.data("scrollPosition").y, 1000);
+								//$scrollableView.scrollview('scrollTo', $body.data("scrollPosition").x, $body.data("scrollPosition").y, 1000);
 							});
 						}
 					} else {
@@ -267,6 +278,11 @@
 						motion.calculateInitialVelocity();
 						
 						$this.data("motion", motion);
+						// Play sounds
+						$body.find("#sound-air").get(0).play();
+						//$this.data("air-sound").play();
+						// Scrolling when throwing an egg.
+						/*
 						$body.data("scrollPosition", $scrollableView.scrollview('getScrollPosition'));
 						// Scroll to bottom, take as long as it takes to drop the egg.
 						//$scrollableView.scrollview('scrollTo', 0, $scrollableView.innerHeight()-$scrollableWorld.innerHeight(), motion.T());
@@ -275,6 +291,7 @@
 							// Scroll to ground, fast enough.
 							$scrollableView.scrollview('scrollTo', 0, $scrollableWorld.innerHeight()-$scrollableView.innerHeight(), Math.max(motion.T()*1000-500, 0));
 						},500);
+						*/
 						$this.data("flying", true);
 					}
 					var t = motion.t();
@@ -340,6 +357,12 @@
 					} else {
 						$this.find(".text.starttext").show();
 					}
+					
+					if(failed === false && tries > 6) {
+						$this.find(".egg-hint").fadeIn('slow');
+					} else {
+						$this.find(".egg-hint").hide();
+					}
 					if(tries !== undefined) {
 						$this.find(".tries-label").text(tries);
 					}
@@ -354,7 +377,11 @@
 			return $(this).each(function() {
 				with({$this:$(this)}) {
 					$this.find(".modal-shadow").hide();
-					var criticalLevel = Math.round(Math.random()*($this.data("options").n));
+					var criticalLevel = Math.floor(Math.random()*($this.data("options").n+1));
+					if(Math.random() > 0.66) {
+						// With 1/3 chance, make the criticalLevel the worst case.
+						criticalLevel = $this.data("options").n-1;
+					}
 					//var criticalLevel = 0;
 					//var criticalLevel = options.n;
 					console.log("Pst.. Critical level is "+criticalLevel);
@@ -366,9 +393,25 @@
 					// Whipe up yoak
 					$this.find(".yoak").hide();
 					$this.droppingEggs('updateBars');
+					$this.droppingEggs("updateHID");
 				}
 			});
-		}
+		},
+		updateHID: function() {
+			return $(this).each(function() {
+				with({$this:$(this)}) {
+					var $hid = $this.find(".hid");
+					if($this.data("tries") > 6) {
+						$hid.addClass("bad");
+					} else {
+						$hid.removeClass("bad");
+					}
+					$hid.find(".hid-eggs-thrown").text($this.data("tries"));
+					$hid.find(".hid-eggs-used").text($this.data("eggsUsed"));
+					$hid.find(".hid-eggs-total").text($this.data("options").eggs);
+				}
+			});
+		},
 	};
 	
 	$.fn.droppingEggs = function(method) {

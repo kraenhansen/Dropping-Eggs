@@ -3,7 +3,8 @@
 	<head>
 		<title>Dropping Eggs</title>
 		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<meta name="apple-mobile-web-app-capable" content="yes">
 		<link rel="stylesheet"  href="jquery.mobile-1.0.1.min.css" type="text/css" charset="utf-8" />
 		<link rel="stylesheet" href="stylesheet.css" type="text/css" charset="utf-8" />
 		<script src="jquery-1.7.1.min.js" type="text/javascript" charset="utf-8"></script>
@@ -33,24 +34,40 @@
 		</script>
 	</head>
 	<body>
+		<audio src="sounds/air.wav" id="sound-air"></audio>
+		<audio src="sounds/impact-crack.wav" id="sound-impact-crack"></audio>
+		<audio src="sounds/impact-normal.wav" id="sound-impact-normal"></audio>
 		<div class="modal-shadow">
 			<div class="modal-box">
-				<div class="text starttext"><h1>Find den etage der lige netop er høj nok til at smadre æg</h1><h2>Men pas på, du har kun 2 æg!</h2></div>
+				<!--
+				<div class="dtu-logo"></div>
+				<div class="imm-logo"></div>
+				-->
+				<div class="text starttext">
+					<h1>Find den etage der lige netop er høj nok, til at æg smadrer når man kaster dem ud derfra</h1>
+					<h2>Men pas på, du har kun 2 æg og det gælder om at kaste så få gange som muligt.</h2>
+				</div>
 				<div class="text wintext-1"><h1>Du gjorde det!</h1><h2>Du fandt den kritiske etage i <span class="tries-label">?</span> forsøg uden at smadre nogle æg!</h2></div>
 				<div class="text wintext-2"><h1>Du gjorde det!</h1><h2>Du fandt den kritiske etage i <span class="tries-label">?</span> forsøg og smadrede kun <span class="eggs-label">?</span> æg!</h2></div>
-				<div class="text failtext"><h1>Øv, du smadrede alle dine æg ...</h1></div>
+				<div class="text failtext"><h1>Øv, du smadrede alle dine æg før du fandt den kritiske etage.</h1></div>
+				<div class="hint egg-hint"><h2>Kan du finde en algoritme hvor du aldrig kaster flere end 6 kast?</h2></div>
 				<div class="controls">
 					<button class="startButton">Start forfra!</button>
+					<small>Demonstration er udviklet af Kræn Hansen (s082932@student.dtu.dk) til algoritmeboden ved Softwareteknologi i forbindelse med åbenthus arrangementet den 1. marts 2012</small>
 				</div>
 			</div>
 		</div>
+		<div class="hid">
+			<div class="hid-eggs">Du har kastet <strong class="hid-eggs-thrown">?</strong> gange og smadret <strong class="hid-eggs-used">?</strong> af ialt <strong class="hid-eggs-total">?</strong> æg</div>
+		</div>
 		<div class="sky">
+			<div class="dtu-in-the-sky"></div>
 			<div class="cloud cloud1"></div>
 			<div class="cloud cloud2"></div>
 			<div class="cloud cloud3"></div>
 			<div class="cloud cloud4"></div>
 		</div>
-		<div class="scrollable" data-scroll="y">
+		<div class="scrollable"><!-- data-scroll="y" -->
 			<div class="scrollable-view">
 				<div class="skyscraper">
 					<div class="skyscraper-roof"></div>

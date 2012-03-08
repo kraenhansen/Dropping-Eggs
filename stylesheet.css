@@ -1,18 +1,21 @@
 * {
 	padding: 0px;
 	margin: 0px;
+	-webkit-tap-highlight-color: rgba(0,0,0,0);
 }
 
 body {
 	overflow: hidden;
 	height: 100%;
+	font-size: 1.5em;
 }
 
 h1 {
-	font-size: 1.0em;
+	font-size: 1.5em;
+	margin-top: 4em;
 }
 h2 {
-	font-size: 0.6em;
+	font-size: 1.0em;
 }
 
 .sky {
@@ -23,6 +26,18 @@ h2 {
 	left: 0px;
 	right: 0px;
 	z-index: 0;
+}
+
+.dtu-in-the-sky {
+	position: absolute;
+	background-image: url("images/logo-dtu.png");
+	background-position: right top;
+	background-repeat: no-repeat;
+	width: 436px;
+	height: 134px;
+	top: 0px;
+	right: 0px;
+	z-index: 1;
 }
 
 .cloud {
@@ -58,7 +73,10 @@ h2 {
 
 .ground {
 	background: -webkit-gradient(linear, center top, center bottom, color-stop(0.0, hsl(0, 20%, 50%)), color-stop(1.0, hsl(0, 20%, 30%)));
-	position: relative;
+	/*position: relative;*/
+	position: absolute;
+	bottom: 0;
+	width: 100%;
 	height: 4em;
 	z-index: 3;
 }
@@ -78,13 +96,15 @@ h2 {
 }
 
 .skyscraper {
-	position: relative;
-	width: 25%;
+	/*position: relative;*/
+	width: 33%;
 	height: auto;
 	z-index: 4;
 	padding-bottom: 0.5em;
 	padding-top: 0.5em;
-	top: 2em;
+
+	position: absolute;
+	bottom: 2em;
 }
 
 .skyscraper-front {
@@ -148,18 +168,23 @@ h2 {
 .skyscraper-level {
 	position: relative;
 	background: rgba(0, 0, 0, 0.1);
-	height: 1.5em;
-	margin-top: 0.5em;
-	margin-left: 0.5em;
+	line-height: 1.2em;
+	margin-top: 0.25em;
+	margin-left: 0.0em;
 	margin-right: 0.5em;
-	border: 0.1em solid rgba(0, 0, 0, 0.3);
+	border: 0.05em solid rgba(0, 0, 0, 0.3);
 	cursor: pointer;
 	
-	line-height: 1.5em;
+	line-height: 1.2em;
 	vertical-align: middle;
 	color: white;
-	text-shadow: 0 1px 1px white, 0 -1px 1px black;
+	font-size: 1.2em;
+	text-shadow: /*0 1px 1px white,*/ 0 -1px 1px #404040;
 	padding-left: 0.5em;
+}
+
+.skyscraper-level:active {
+	background: rgba(0, 0, 0, 0.3);
 }
 
 .egg {
@@ -189,14 +214,29 @@ h2 {
 
 .bar.red {
 	top: 0;
-	background: rgba(255, 0, 0, 0.05);
+	background: rgba(255, 0, 0, 0.15);
 	border-bottom: 0.2em solid rgba(255, 0, 0, 0.5);
 }
 
 .bar.green {
 	bottom: 0;
-	background: rgba(0, 255, 0, 0.05);
+	background: rgba(0, 255, 0, 0.15);
 	border-top: 0.2em solid rgba(0, 255, 0, 0.5);
+}
+
+.hid {
+	position: fixed;
+	bottom: 0.5em;
+	left: 0px;
+	right: 0.5em;
+	height: auto;
+	z-index: 9;
+	text-align: right;
+	color: #E0E0E0;
+}
+
+.hid.bad {
+	color: rgba(255, 80, 80, 1.0);
 }
 
 .modal-shadow {
@@ -211,7 +251,10 @@ h2 {
 }
 
 .modal-box {
-	background: rgba(255, 255, 255, 0.8);
+	background-color: rgba(255, 255, 255, 0.8);
+	background-image: url("images/logo-imm.png");
+	background-position: left bottom;
+	background-repeat: no-repeat;
 	position: fixed;
 	left: 10%;
 	top: 10%;
@@ -220,16 +263,27 @@ h2 {
 	border-radius: 1em;
 }
 
-.modal-box .text {
+.modal-box-topspacer {
+	height: 134px;
+}
+
+.modal-box .text, .modal-box .hint {
 	margin: 2em;
 	text-align: center;
 }
 
 .modal-box .controls {
 	position: absolute;
-	bottom: 1em;
+	bottom: 101px; /*81+20*/
 	left: 1em;
 	right: 1em;
+}
+
+.modal-box .controls small {
+	display: block;
+	width: 100%;
+	text-align: center;
+	font-size: 0.6em;
 }
 
 .text {
@@ -270,11 +324,16 @@ h2 {
 }
 
 .scrollable {
-	height: 100%;
+	position: absolute;
+	top: 0px;
+	bottom: 0px;
+	width: 100%;
 }
 
 .scrollable-view {
-	height: auto;
-	position: relative;
+	position: absolute;
+	top: 0px;
+	bottom: 0px;
+	width: 100%;
 /*	padding-top: 2em;*/
 }
